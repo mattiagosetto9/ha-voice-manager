@@ -665,43 +665,43 @@ async def websocket_save_all(
     """Save all configuration at once (filter configs, aliases, settings)."""
     try:
         storage = _get_storage(hass)
-        
+
         # Save filter configs
         if "filter_config" in msg:
             validated_config = validate_filter_config(msg["filter_config"])
             await storage.async_set_filter_config(validated_config, None)
-        
+
         if "google_filter_config" in msg:
             validated_config = validate_filter_config(msg["google_filter_config"])
             await storage.async_set_filter_config(validated_config, ASSISTANT_GOOGLE)
-        
+
         if "alexa_filter_config" in msg:
             validated_config = validate_filter_config(msg["alexa_filter_config"])
             await storage.async_set_filter_config(validated_config, ASSISTANT_ALEXA)
-        
+
         if "homekit_filter_config" in msg:
             validated_config = validate_filter_config(msg["homekit_filter_config"])
             await storage.async_set_filter_config(validated_config, ASSISTANT_HOMEKIT)
-        
+
         # Save aliases
         if "aliases" in msg:
             await storage.async_set_aliases_bulk(msg["aliases"], None)
-        
+
         if "google_aliases" in msg:
             await storage.async_set_aliases_bulk(msg["google_aliases"], ASSISTANT_GOOGLE)
-        
+
         if "alexa_aliases" in msg:
             await storage.async_set_aliases_bulk(msg["alexa_aliases"], ASSISTANT_ALEXA)
-        
+
         # Save settings
         if "google_settings" in msg:
             validated_settings = validate_google_settings(msg["google_settings"])
             await storage.async_set_google_settings(validated_settings)
-        
+
         if "alexa_settings" in msg:
             validated_settings = validate_alexa_settings(msg["alexa_settings"])
             await storage.async_set_alexa_settings(validated_settings)
-        
+
         # Save HomeKit bridge
         if "homekit_entry_id" in msg:
             entry_id = msg["homekit_entry_id"]
@@ -711,7 +711,7 @@ async def websocket_save_all(
                 if bridge is None:
                     raise HomeKitError(f"HomeKit bridge not found: {entry_id}")
             await storage.async_set_homekit_entry_id(entry_id)
-        
+
         connection.send_result(msg["id"], {"success": True})
 
     except ValidationError as err:
